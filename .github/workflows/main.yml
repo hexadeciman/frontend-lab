@@ -29,13 +29,13 @@ jobs:
 
     - run: CI=true pnpm i
     - run: pnpm test
-    - run: pnpm run build
+    - run: pnpm run build-storybook
 
     - name: Zip build
       uses: thedoctor0/zip-release@master
       with:
         filename: app-${{ steps.tag_version.outputs.new_tag }}.zip
-        path: dist
+        path: storybook-static
 
     - name: Upload build zip artifact
       uses: actions/upload-artifact@v1
@@ -62,7 +62,7 @@ jobs:
         command: c
         cwd: "./"
         files: |
-          dist/
+          storybook-static/
           captain-definition
         outPath: deploy.tar
 
