@@ -1,7 +1,6 @@
 import React, {
 	KeyboardEvent,
 	ReactNode,
-	Ref,
 	useCallback,
 	useEffect,
 	useRef,
@@ -9,10 +8,11 @@ import React, {
 } from 'react'
 import SearchIcon from './icons/search.svg'
 import CloseIcon from './icons/close.svg'
-import { classNames } from 'utils/cn'
+
 import { useInputHighlighter } from './hooks/useInputHighlighter'
 import { AutoCompleteEntity } from 'stories/DynamicSearchAutocomplete.stories'
 import ControlledInput from './ControlledInput'
+import { classNames } from 'utils'
 
 export interface Item {
 	type: AutoCompleteEntity
@@ -85,7 +85,6 @@ const shouldDisplayTitles = (items: Item[], i: number) => {
 	return i === 0 || items[i].type !== items[i - 1].type
 }
 
-const selectionKeyEvents = ['Tab', 'Enter']
 function DynamicSearchAutoComplete<T extends Item>({
 	value,
 	query,
@@ -100,13 +99,8 @@ function DynamicSearchAutoComplete<T extends Item>({
 	placeholder,
 	onQuery,
 	key = 'id',
-	label = 'name',
 	popupClassName = '',
-	autoFocus = false,
-	maxItems,
-	allowCoordinates,
-	loading,
-	animateLoading
+	autoFocus = false
 }: DynamicSearchAutoCompleteProps<T>): JSX.Element {
 	const inputRef = useRef<HTMLInputElement>(null)
 	const {
