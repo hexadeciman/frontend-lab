@@ -3,7 +3,7 @@ import { ListCard } from 'components/ListCard'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-	title: 'LifeInTodos/ListCard',
+	title: 'Experiments/ListCard',
 	component: ListCard,
 	parameters: {
 		title: 'Art',
@@ -42,23 +42,23 @@ type Story = StoryObj<typeof meta>
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
 	args: {
-		title: 'Art',
-		emoji: '🎨',
+		title: ' Project',
+		emoji: '💻',
 		description:
-			"This to do list is about the art project I'd like to pursue",
+			"This to-do list is about the coding project I'm working on",
 		todos: [
 			{
-				label: 'Continue working on your 100 posters goal',
+				label: 'Set up the development environment',
 				checked: true,
 				id: '1'
 			},
 			{
-				label: 'Scan paper art and import in procreate',
+				label: 'Implement the authentication module',
 				checked: false,
 				id: '2'
 			},
 			{
-				label: 'Scan everything',
+				label: 'Write unit tests for the API',
 				checked: true,
 				id: '3',
 				selected: true

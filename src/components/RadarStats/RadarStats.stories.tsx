@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { RadarStats } from 'components/RadarStats/RadarStats'
 
 const meta = {
-	title: 'DataViz/RadarStat',
+	title: 'Experiments/RadarStat',
 	component: RadarStats,
 	parameters: {
 		previewTabs: {

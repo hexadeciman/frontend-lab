@@ -2,11 +2,10 @@ import type { Preview } from '@storybook/react'
 import 'tailwindcss/tailwind.css'
 import 'material-icons/iconfont/material-icons.css'
 import '../src/index.scss'
-
 const preview: Preview = {
 	parameters: {
-		previewTabs: {
-			docs: { hidden: true }
+		options: {
+			showPanel: true
 		},
 		controls: {
 			matchers: {
@@ -14,6 +13,7 @@ const preview: Preview = {
 				date: /Date$/i
 			}
 		},
+		layout: 'fullscreen',
 		backgrounds: {
 			default: 'white',
 			values: [

@@ -5,40 +5,72 @@ import { useSpring, animated, useSprings } from 'react-spring'
 // Player data with stats
 const players = [
 	{
-		name: 'Lionel Messi',
+		name: 'Vinícius Júnior',
 		stats: {
-			Pace: 80,
-			Shooting: 70,
-			Passing: 60,
+			Pace: 95,
+			Shooting: 78,
+			Passing: 73,
 			Dribbling: 90,
-			Defending: 50,
-			Physical: 75
-		}
-	},
-	{
-		name: 'Cristiano Ronaldo',
-		stats: {
-			Pace: 60,
-			Shooting: 100,
-			Passing: 75,
-			Dribbling: 65,
-			Defending: 85,
+			Defending: 30,
 			Physical: 70
 		}
 	},
 	{
 		name: 'Yamin Lamal',
 		stats: {
-			Pace: 90,
-			Shooting: 85,
+			Pace: 83,
+			Shooting: 72,
+			Passing: 78,
+			Dribbling: 85,
+			Defending: 60,
+			Physical: 70
+		}
+	},
+	{
+		name: 'Erling Haaland',
+		stats: {
+			Pace: 89,
+			Shooting: 91,
+			Passing: 65,
+			Dribbling: 80,
+			Defending: 45,
+			Physical: 88
+		}
+	},
+	{
+		name: 'Kylian Mbappe',
+		stats: {
+			Pace: 97,
+			Shooting: 89,
+			Passing: 80,
+			Dribbling: 92,
+			Defending: 36,
+			Physical: 76
+		}
+	},
+	{
+		name: 'Virgil van Dijk',
+		stats: {
+			Pace: 76,
+			Shooting: 60,
 			Passing: 70,
-			Dribbling: 75,
-			Defending: 40,
-			Physical: 95
+			Dribbling: 72,
+			Defending: 91,
+			Physical: 86
+		}
+	},
+	{
+		name: 'NGolo Kanté',
+		stats: {
+			Pace: 80,
+			Shooting: 66,
+			Passing: 75,
+			Dribbling: 81,
+			Defending: 87,
+			Physical: 82
 		}
 	}
 ]
-
 const statCategories = [
 	'Pace',
 	'Shooting',
@@ -49,7 +81,7 @@ const statCategories = [
 ]
 const chartRadius = 100 // Radius of the radar chart
 const svgWidth = 400
-const svgHeight = 400
+const svgHeight = 300
 const centerX = svgWidth / 2
 const centerY = svgHeight / 2
 
@@ -85,7 +117,7 @@ export const RadarStats = ({ plop: _ }: OwnProps) => {
 	})
 
 	return (
-		<div className="flex flex-col items-center bg-slate-950 p-6">
+		<div className="m-auto mt-3 flex w-fit flex-col items-center rounded-lg border border-white/20 bg-black p-6">
 			{/* Player selection buttons */}
 			<div className="flex space-x-4">
 				{players.map((player) => (
@@ -93,10 +125,10 @@ export const RadarStats = ({ plop: _ }: OwnProps) => {
 						key={player.name}
 						onClick={() => setSelectedPlayer(player)}
 						onMouseEnter={() => setSelectedPlayer(player)}
-						className={`rounded-lg border px-4 py-2 text-white transition-all ${
+						className={`rounded border px-2 py-1 text-xs text-white transition-all ${
 							selectedPlayer.name === player.name
 								? 'border-gray-400'
-								: 'border-transparent bg-transparent '
+								: 'border-transparent bg-transparent  opacity-40'
 						}`}
 					>
 						{player.name}
@@ -109,7 +141,7 @@ export const RadarStats = ({ plop: _ }: OwnProps) => {
 				height={svgHeight}
 			>
 				{/* Draw circular grid */}
-				{[2, 100].map((r) => (
+				{[100].map((r) => (
 					<circle
 						key={r}
 						cx={centerX}
@@ -117,6 +149,7 @@ export const RadarStats = ({ plop: _ }: OwnProps) => {
 						r={r}
 						stroke="rgba(255, 255, 255, 0.2)"
 						fill="none"
+						strokeDasharray="4 4" // This creates a dashed stroke pattern
 					/>
 				))}
 				{/* Draw radar shape with animated polygon */}
