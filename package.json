@@ -31,6 +31,7 @@
 		"@fontsource/material-icons": "^5.0.16",
 		"@fontsource/roboto": "^5.0.12",
 		"@heroicons/react": "^2.2.0",
+		"@number-flow/react": "^0.4.2",
 		"@radix-ui/react-checkbox": "^1.0.4",
 		"@radix-ui/react-slot": "^1.0.2",
 		"@storybook/addon-actions": "^8.4.7",

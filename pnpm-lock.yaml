@@ -23,6 +23,9 @@ dependencies:
   '@heroicons/react':
     specifier: ^2.2.0
     version: 2.2.0(react@18.2.0)
+  '@number-flow/react':
+    specifier: ^0.4.2
+    version: 0.4.2(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-checkbox':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.43)(react-dom@18.2.0)(react@18.2.0)
@@ -2112,6 +2115,18 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@number-flow/react@0.4.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-lCAkLuK/3+Nlhb/oy1tpRnadp1vvfc/cWTtWUL9hMksHsJOGh+1T5Y/dyeQhyCD0heaWTjNYWX2ndBKLJwuC0A==}
+    peerDependencies:
+      react: ^18 || ^19.0.0-rc-915b914b3a-20240515
+      react-dom: ^18
+    dependencies:
+      esm-env: 1.2.1
+      number-flow: 0.4.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@pkgr/utils@2.4.2:
     resolution: {integrity: sha512-POgTXhjrTfbTV63DiFXav4lBHiICLKKwDeaKn9Nphwj7WH6m0hMMCaJkMyRWjgtPFyRKRVoMXXjczsTQRDEhYw==}
@@ -5350,6 +5365,10 @@ packages:
       - supports-color
     dev: true
 
+  /esm-env@1.2.1:
+    resolution: {integrity: sha512-U9JedYYjCnadUlXk7e1Kr+aENQhtUaoaV9+gZm1T8LC/YBAPJx3NSPIAurFOC0U5vrdSevnUJS2/wUVxGwPhng==}
+    dev: false
+
   /espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -7025,6 +7044,12 @@ packages:
 
   /nullthrows@1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
+    dev: false
+
+  /number-flow@0.4.1:
+    resolution: {integrity: sha512-d39o1tWL7mMMBLuOfHswtQ8r0fj9eUcatb4G1Spdv0ZO/I30kg9DBdSzSPjNG6hrj1slQ6KA3TQXk1RmOq4qOA==}
+    dependencies:
+      esm-env: 1.2.1
     dev: false
 
   /ob1@0.80.6:
