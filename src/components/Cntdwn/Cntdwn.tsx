@@ -6,18 +6,23 @@ import { classNames } from 'utils'
 const AnimatedTimer = ({ time, className, prefix }: any) => (
 	<span className={classNames('font-semibold', className)}>
 		<NumberFlowGroup>
-			<NumberFlow
-				className=""
-				value={time.hours}
-				format={{ minimumIntegerDigits: 2, useGrouping: false }}
-				suffix="h "
-				prefix={prefix}
-			/>
-			<NumberFlow
-				format={{ minimumIntegerDigits: 2, useGrouping: false }}
-				value={time.minutes}
-				suffix="m "
-			/>
+			{time.hours > 0 && (
+				<NumberFlow
+					className=""
+					value={time.hours}
+					format={{ minimumIntegerDigits: 1, useGrouping: false }}
+					suffix="h "
+					prefix={prefix}
+				/>
+			)}
+			{!(time.hours === 0 && time.minutes === 0) && (
+				<NumberFlow
+					format={{ minimumIntegerDigits: 2, useGrouping: false }}
+					value={time.minutes}
+					suffix="m "
+				/>
+			)}
+
 			<NumberFlow
 				format={{ minimumIntegerDigits: 2, useGrouping: false }}
 				value={time.seconds}
@@ -71,7 +76,7 @@ export const Cntdwn = () => {
 			<div className="relative mx-auto h-[800px] w-full overflow-y-auto rounded-lg bg-white shadow-md ">
 				<div className="pointer-events-none fixed z-10 mb-4  w-[inherit] items-center pr-12">
 					<div className="flex w-full justify-between  rounded-lg p-6 backdrop-blur-sm">
-						<h1 className="text-xl font-bold text-[#444]">
+						<h1 className="hidden text-xl font-bold text-[#444] lg:block">
 							MKT CNTDWN
 						</h1>
 						<div className="relative flex">
