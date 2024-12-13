@@ -149,7 +149,7 @@ const calculateTimeDifference = (targetTime: Date) => {
 }
 
 // Function to get updated exchanges
-export const getUpdatedExchanges = (orderMode: number) => {
+export const getUpdatedExchanges = (orderMode: number, search: string) => {
 	return [...exchanges]
 		.sort((a, b) => {
 			switch (orderMode) {
@@ -164,6 +164,13 @@ export const getUpdatedExchanges = (orderMode: number) => {
 				}
 			}
 		})
+		.filter(
+			(exchange) =>
+				exchange.exchanges
+					.toLowerCase()
+					.includes(search.toLowerCase()) ||
+				exchange.country.toLowerCase().includes(search.toLowerCase())
+		)
 		.map((exchange) => {
 			const now = new Date()
 			const nowTime = now.getHours() * 60 + now.getMinutes() // Convert current time to minutes of the day

@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { getUpdatedExchanges } from './exchanges'
 import NumberFlow, { NumberFlowGroup } from '@number-flow/react'
 import { classNames } from 'utils'
@@ -68,67 +68,78 @@ export const Cntdwn = () => {
 		setTimezone(`UTC ${offset >= 0 ? '+' : ''}${offset}`)
 	}, [])
 
+	const [search, setSearch] = useState('')
 	const [orderMode, setOrderMode] = useState(0)
 	const [exchangeList, setExchanges] = useState(
-		getUpdatedExchanges(orderMode)
+		getUpdatedExchanges(orderMode, search)
 	)
 
 	const onReorder = useCallback(() => {
 		setOrderMode((old) => (old + 1) % 3)
 	}, [])
 	useEffect(() => {
-		setExchanges(getUpdatedExchanges(orderMode))
-	}, [orderMode])
+		setExchanges(getUpdatedExchanges(orderMode, search))
+	}, [orderMode, search])
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setExchanges(getUpdatedExchanges(orderMode))
+			setExchanges(getUpdatedExchanges(orderMode, search))
 		}, 1000)
 
 		return () => clearInterval(interval) // Cleanup interval on component unmount
-	}, [orderMode])
+	}, [orderMode, search])
 
+	const flipKey = useMemo(
+		() => exchangeList.map((x) => x.exchanges).join(','),
+		[exchangeList]
+	)
 	return (
 		<div className="h-screen bg-gray-100 p-4">
 			<div className="relative mx-auto h-[800px] w-full overflow-y-auto rounded-lg bg-white shadow-md ">
 				<div className="pointer-events-none fixed z-10 mb-4  w-[inherit] items-center pr-12">
-					<div className="flex w-full justify-between  rounded-lg p-6 backdrop-blur-sm">
+					<div className="grid w-full grid-cols-[1fr_125px] rounded-lg  p-6 backdrop-blur-sm lg:grid-cols-[max-content_1fr_125px]">
 						<h1 className="hidden text-xl font-bold text-[#444] lg:block">
 							MKT CNTDWN
 						</h1>
-						<div className="relative flex">
-							<input
-								type="text"
-								placeholder="Search Exchange"
-								className="pointer-events-auto w-64 rounded-full border border-gray-300 py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring focus:ring-blue-300"
-							/>
-							<svg
-								className="absolute left-3 top-3 h-4 w-4 text-gray-400"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path d="M10 2a8 8 0 015.66 13.66l4.09 4.09a1 1 0 01-1.42 1.42l-4.09-4.09A8 8 0 1110 2zm0 2a6 6 0 100 12A6 6 0 0010 4z" />
-							</svg>
+						<div className="flex w-full justify-center">
+							<div className="relative">
+								<input
+									type="text"
+									value={search}
+									onChange={(e) => {
+										setSearch(e.target.value)
+									}}
+									placeholder="Search Exchange"
+									className="pointer-events-auto w-64 rounded-full border border-gray-300 py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+								/>
+								<svg
+									className="absolute left-3 top-3 h-4 w-4 text-gray-400"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+								>
+									<path d="M10 2a8 8 0 015.66 13.66l4.09 4.09a1 1 0 01-1.42 1.42l-4.09-4.09A8 8 0 1110 2zm0 2a6 6 0 100 12A6 6 0 0010 4z" />
+								</svg>
+							</div>
 						</div>
 
-						<div className=" pointer-events-auto flex space-x-4 text-sm text-gray-500">
+						<div className="pointer-events-auto flex w-full items-center justify-end space-x-4 text-sm text-gray-500">
 							<button
 								onClick={onReorder}
-								className="font-bold text-black"
+								className="flex w-full items-center justify-end gap-x-1 font-bold text-black"
 							>
 								{orderMode === 2 && <span>🔽</span>}
 								{orderMode === 1 && <span>🔼</span>} relative
+								<div className="flex items-center justify-end text-xs !font-normal text-gray-500">
+									<span>({timezone})</span>
+								</div>
 							</button>
-							<button>absolute</button>
 						</div>
 					</div>
 				</div>
 
 				<div className="mt-10 p-6">
-					<Flipper
-						flipKey={exchangeList.map((x) => x.exchanges).join(',')}
-					>
+					<Flipper flipKey={flipKey}>
 						{exchangeList.map(
 							(
 								{
@@ -174,10 +185,6 @@ export const Cntdwn = () => {
 							)
 						)}
 					</Flipper>
-
-					<div className="mt-6 flex items-center justify-end text-sm text-gray-500">
-						<span>{timezone}</span>
-					</div>
 				</div>
 			</div>
 		</div>
