@@ -96,21 +96,22 @@ export const Cntdwn = () => {
 	return (
 		<div className="h-screen bg-gray-100 p-4">
 			<div className="relative mx-auto h-[800px] w-full overflow-y-auto rounded-lg bg-white shadow-md ">
-				<div className="pointer-events-none fixed z-10 mb-4  w-[inherit] items-center pr-12">
-					<div className="grid w-full grid-cols-[1fr_125px] rounded-lg  p-6 backdrop-blur-sm lg:grid-cols-[max-content_1fr_125px]">
+				<div className="pointer-events-none fixed z-10 mb-4  w-[inherit] items-center pr-10 lg:pr-12">
+					<div className="grid w-full grid-cols-[1fr_125px] items-center gap-x-2 rounded-lg px-2 py-6 backdrop-blur-sm lg:grid-cols-[max-content_1fr_125px] lg:p-6">
 						<h1 className="hidden text-xl font-bold text-[#444] lg:block">
 							MKT CNTDWN
 						</h1>
-						<div className="flex w-full justify-center">
-							<div className="relative">
+						<div className="flex w-full  justify-center gap-x-2">
+							<div className="relative w-full max-w-[250px]">
 								<input
 									type="text"
 									value={search}
+									autoFocus
 									onChange={(e) => {
 										setSearch(e.target.value)
 									}}
 									placeholder="Search Exchange"
-									className="pointer-events-auto w-64 rounded-full border border-gray-300 py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+									className="pointer-events-auto w-full rounded-full border border-gray-300 py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring focus:ring-blue-300"
 								/>
 								<svg
 									className="absolute left-3 top-3 h-4 w-4 text-gray-400"
