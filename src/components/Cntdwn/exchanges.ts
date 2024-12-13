@@ -117,7 +117,7 @@ export const exchanges = [
 		openTime: new Date('1970-01-01T10:00:00+03:00'), // AST
 		closeTime: new Date('1970-01-01T15:00:00+03:00') // AST
 	}
-].sort((a, b) => a.openTime.getTime() - b.openTime.getTime())
+]
 
 // Helper function to calculate time difference
 const calculateTimeDifference = (targetTime: Date) => {
@@ -149,26 +149,42 @@ const calculateTimeDifference = (targetTime: Date) => {
 }
 
 // Function to get updated exchanges
-export const getUpdatedExchanges = () => {
-	return exchanges.map((exchange) => {
-		const now = new Date()
-		const nowTime = now.getHours() * 60 + now.getMinutes() // Convert current time to minutes of the day
-		const openTime =
-			exchange.openTime.getHours() * 60 + exchange.openTime.getMinutes() // Convert open time to minutes of the day
-		const closeTime =
-			exchange.closeTime.getHours() * 60 + exchange.closeTime.getMinutes() // Convert close time to minutes of the day
-		const isOpen = nowTime >= openTime && nowTime <= closeTime
+export const getUpdatedExchanges = (orderMode: number) => {
+	return [...exchanges]
+		.sort((a, b) => {
+			switch (orderMode) {
+				case 1: {
+					return a.openTime.getTime() - b.openTime.getTime()
+				}
+				case 2: {
+					return b.openTime.getTime() - a.openTime.getTime()
+				}
+				default: {
+					return 0
+				}
+			}
+		})
+		.map((exchange) => {
+			const now = new Date()
+			const nowTime = now.getHours() * 60 + now.getMinutes() // Convert current time to minutes of the day
+			const openTime =
+				exchange.openTime.getHours() * 60 +
+				exchange.openTime.getMinutes() // Convert open time to minutes of the day
+			const closeTime =
+				exchange.closeTime.getHours() * 60 +
+				exchange.closeTime.getMinutes() // Convert close time to minutes of the day
+			const isOpen = nowTime >= openTime && nowTime <= closeTime
 
-		return {
-			flag: exchange.flag,
-			country: exchange.country,
-			exchanges: exchange.exchanges,
-			timeRemaining: isOpen
-				? calculateTimeDifference(exchange.closeTime)
-				: null,
-			timeUntilOpen: !isOpen
-				? calculateTimeDifference(exchange.openTime)
-				: null
-		}
-	})
+			return {
+				flag: exchange.flag,
+				country: exchange.country,
+				exchanges: exchange.exchanges,
+				timeRemaining: isOpen
+					? calculateTimeDifference(exchange.closeTime)
+					: null,
+				timeUntilOpen: !isOpen
+					? calculateTimeDifference(exchange.openTime)
+					: null
+			}
+		})
 }

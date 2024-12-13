@@ -1,36 +1,42 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import { getUpdatedExchanges } from './exchanges'
 import NumberFlow, { NumberFlowGroup } from '@number-flow/react'
 import { classNames } from 'utils'
+import { Flipper, Flipped } from 'react-flip-toolkit'
 
-const AnimatedTimer = ({ time, className, prefix }: any) => (
-	<span className={classNames('font-semibold', className)}>
-		<NumberFlowGroup>
-			{time.hours > 0 && (
-				<NumberFlow
-					className=""
-					value={time.hours}
-					format={{ minimumIntegerDigits: 1, useGrouping: false }}
-					suffix="h "
-					prefix={prefix}
-				/>
-			)}
-			{!(time.hours === 0 && time.minutes === 0) && (
+const AnimatedTimer = ({ time, className, prefix }: any) => {
+	const showHours = time.hours > 0
+	const showMinutes = !(time.hours === 0 && time.minutes === 0)
+	return (
+		<span className={classNames('font-semibold', className)}>
+			<NumberFlowGroup>
+				{showHours && (
+					<NumberFlow
+						className=""
+						value={time.hours}
+						format={{ minimumIntegerDigits: 1, useGrouping: false }}
+						suffix="h "
+						prefix={prefix}
+					/>
+				)}
+				{showMinutes && (
+					<NumberFlow
+						format={{ minimumIntegerDigits: 2, useGrouping: false }}
+						value={time.minutes}
+						prefix={!showHours && prefix}
+						suffix="m "
+					/>
+				)}
 				<NumberFlow
 					format={{ minimumIntegerDigits: 2, useGrouping: false }}
-					value={time.minutes}
-					suffix="m "
+					value={time.seconds}
+					prefix={!showMinutes && prefix}
+					suffix="s"
 				/>
-			)}
-
-			<NumberFlow
-				format={{ minimumIntegerDigits: 2, useGrouping: false }}
-				value={time.seconds}
-				suffix="s"
-			/>
-		</NumberFlowGroup>
-	</span>
-)
+			</NumberFlowGroup>
+		</span>
+	)
+}
 const ExchangeRow = ({ exchanges, timeRemaining, timeUntilOpen }: any) => {
 	const [prefix, setPrefix] = useState('')
 	return (
@@ -62,14 +68,25 @@ export const Cntdwn = () => {
 		setTimezone(`UTC ${offset >= 0 ? '+' : ''}${offset}`)
 	}, [])
 
-	const [exchangeList, setExchanges] = useState(getUpdatedExchanges())
+	const [orderMode, setOrderMode] = useState(0)
+	const [exchangeList, setExchanges] = useState(
+		getUpdatedExchanges(orderMode)
+	)
+
+	const onReorder = useCallback(() => {
+		setOrderMode((old) => (old + 1) % 3)
+	}, [])
+	useEffect(() => {
+		setExchanges(getUpdatedExchanges(orderMode))
+	}, [orderMode])
+
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setExchanges(getUpdatedExchanges())
+			setExchanges(getUpdatedExchanges(orderMode))
 		}, 1000)
 
 		return () => clearInterval(interval) // Cleanup interval on component unmount
-	}, [])
+	}, [orderMode])
 
 	return (
 		<div className="h-screen bg-gray-100 p-4">
@@ -95,9 +112,13 @@ export const Cntdwn = () => {
 							</svg>
 						</div>
 
-						<div className="flex space-x-4 text-sm text-gray-500">
-							<button className="font-bold text-black">
-								relative
+						<div className=" pointer-events-auto flex space-x-4 text-sm text-gray-500">
+							<button
+								onClick={onReorder}
+								className="font-bold text-black"
+							>
+								{orderMode === 2 && <span>🔽</span>}
+								{orderMode === 1 && <span>🔼</span>} relative
 							</button>
 							<button>absolute</button>
 						</div>
@@ -105,41 +126,55 @@ export const Cntdwn = () => {
 				</div>
 
 				<div className="mt-10 p-6">
-					{exchangeList.map(
-						(
-							{
-								country,
-								flag,
-								exchanges,
-								timeRemaining,
-								timeUntilOpen
-							},
-							index
-						) => (
-							<Fragment key={exchanges}>
-								{(index === 0 ||
-									(index > 0 &&
-										(exchangeList[index] as any).flag !=
-											(exchangeList[index - 1] as any)
-												.flag)) && (
-									<div className="mb-2 mt-6 flex items-center space-x-2">
-										<span className="text-xl">{flag}</span>
-										<h2 className="text-lg font-bold">
-											{country}
-										</h2>
-									</div>
-								)}
-								<ExchangeRow
-									key={exchanges}
-									country={country}
-									flag={flag}
-									exchanges={exchanges}
-									timeRemaining={timeRemaining}
-									timeUntilOpen={timeUntilOpen}
-								/>
-							</Fragment>
-						)
-					)}
+					<Flipper
+						flipKey={exchangeList.map((x) => x.exchanges).join(',')}
+					>
+						{exchangeList.map(
+							(
+								{
+									country,
+									flag,
+									exchanges,
+									timeRemaining,
+									timeUntilOpen
+								},
+								index
+							) => (
+								<Flipped key={exchanges} flipId={exchanges}>
+									{(flippedProps) => (
+										<div {...flippedProps}>
+											{(index === 0 ||
+												(index > 0 &&
+													(exchangeList[index] as any)
+														.flag !=
+														(
+															exchangeList[
+																index - 1
+															] as any
+														).flag)) && (
+												<div className="mb-2 mt-6 flex items-center space-x-2">
+													<span className="text-xl">
+														{flag}
+													</span>
+													<h2 className="text-lg font-bold">
+														{country}
+													</h2>
+												</div>
+											)}
+											<ExchangeRow
+												country={country}
+												flag={flag}
+												exchanges={exchanges}
+												timeRemaining={timeRemaining}
+												timeUntilOpen={timeUntilOpen}
+											/>
+										</div>
+									)}
+								</Flipped>
+							)
+						)}
+					</Flipper>
+
 					<div className="mt-6 flex items-center justify-end text-sm text-gray-500">
 						<span>{timezone}</span>
 					</div>
