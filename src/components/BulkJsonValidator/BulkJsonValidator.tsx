@@ -5,31 +5,39 @@ const DragAndDropJSONValidator: React.FC = () => {
 	const [validFiles, setValidFiles] = useState<string[]>([])
 	const [invalidFiles, setInvalidFiles] = useState<string[]>([])
 
-	const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
+	const handleDrop = async (
+		event: React.DragEvent<HTMLDivElement>
+	): Promise<void> => {
 		event.preventDefault()
 
 		const files = Array.from(event.dataTransfer.files)
 		const newValidFiles: string[] = []
 		const newInvalidFiles: string[] = []
 
-		files.forEach((file) => {
-			if (file.type === 'application/json') {
-				const reader = new FileReader()
-				reader.onload = () => {
-					try {
-						JSON.parse(reader.result as string)
-						newValidFiles.push(file.name)
-					} catch (error) {
+		await Promise.all(
+			files.map((file) => {
+				return new Promise<void>((resolve) => {
+					if (file.type === 'application/json') {
+						const reader = new FileReader()
+						reader.onload = () => {
+							try {
+								JSON.parse(reader.result as string)
+								newValidFiles.push(file.name)
+							} catch (error) {
+								newInvalidFiles.push(file.name)
+							}
+							resolve()
+						}
+						reader.readAsText(file)
+					} else {
 						newInvalidFiles.push(file.name)
+						resolve()
 					}
-					updateFileLists(newValidFiles, newInvalidFiles)
-				}
-				reader.readAsText(file)
-			} else {
-				newInvalidFiles.push(file.name)
-				updateFileLists(newValidFiles, newInvalidFiles)
-			}
-		})
+				})
+			})
+		)
+
+		updateFileLists(newValidFiles, newInvalidFiles)
 	}
 
 	const updateFileLists = (valid: string[], invalid: string[]): void => {
